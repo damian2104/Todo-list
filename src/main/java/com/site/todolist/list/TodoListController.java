@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 //@RequestMapping(path = "api/todolist")
@@ -33,7 +32,7 @@ public class TodoListController {
         model.addAttribute("something", "this is some string");
         model.addAttribute("tasks", service.getTodoList());
         model.addAttribute("newtask", new TodoList());
-        return "index2";
+        return "index";
     }
 
     @PostMapping("/todolist")
@@ -47,7 +46,7 @@ public class TodoListController {
     public String eraseTask(@PathVariable("taskId") Long id) {
         System.out.println("HEJ");
         service.deleteTask(id);
-        return "index3";
+        return "index2";
     }
 
     @PutMapping(path = "todolist/{taskId}")
@@ -57,6 +56,6 @@ public class TodoListController {
             @RequestParam(required = false) String date) {
         LocalDate localDate = LocalDate.parse(date);
         service.updateTask(id, task, localDate);
-        return "index3";
+        return "index2";
     }
 }
