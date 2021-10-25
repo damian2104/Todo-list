@@ -29,7 +29,7 @@ public class TodoListService {
     public void deleteTask(Long id) {
         boolean exists = repository.existsById(id);
         if (!exists) {
-            throw new IllegalStateException("Task with id" + id + "does not exist");
+            throw new IllegalStateException("Task with id " + id + "does not exist");
         }
         repository.deleteById(id);
     }

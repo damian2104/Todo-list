@@ -1,34 +1,22 @@
 package com.site.todolist.list;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@RestController
-@RequestMapping(path = "api/todolist")
+
+//@RequestMapping(path = "api/todolist")
+@Controller
 public class TodoListController {
     private final TodoListService service;
 
     @Autowired
     public TodoListController(TodoListService service) {
         this.service = service;
-    }
-
-    @GetMapping
-    public List<TodoList> getTodoList() {
-        return service.getTodoList();
-    }
-
-    @PostMapping
-    public void registerNewTask(@RequestBody TodoList list) {
-        service.addNewTask(list);
-    }
-
-    @DeleteMapping(path = "{taskId}")
-    public void deleteTask(@PathVariable("taskId") Long id) {
-        service.deleteTask(id);
     }
 
     @PutMapping(path = "{taskId}")
@@ -38,5 +26,37 @@ public class TodoListController {
             @RequestParam(required = false) String date) {
         LocalDate localDate = LocalDate.parse(date);
         service.updateTask(id, task, localDate);
+    }
+
+    @GetMapping("/todolist")
+    public String index(Model model) {
+        model.addAttribute("something", "this is some string");
+        model.addAttribute("tasks", service.getTodoList());
+        model.addAttribute("newtask", new TodoList());
+        return "index2";
+    }
+
+    @PostMapping("/todolist")
+    public String submitTask(@RequestBody TodoList task, Model model) {
+        model.addAttribute("task", task);
+        service.addNewTask(task);
+        return "result";
+    }
+
+    @DeleteMapping(path = "todolist/{taskId}")
+    public String eraseTask(@PathVariable("taskId") Long id) {
+        System.out.println("HEJ");
+        service.deleteTask(id);
+        return "index3";
+    }
+
+    @PutMapping(path = "todolist/{taskId}")
+    public String modify(
+            @PathVariable("taskId") Long id,
+            @RequestParam(required = false) String task,
+            @RequestParam(required = false) String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        service.updateTask(id, task, localDate);
+        return "index3";
     }
 }
